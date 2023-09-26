@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  rust-axum-diesel:
+    image: back-bench-rust-axum-diesel-image:dev
+    build:
+      context: ../../../
+      dockerfile: docker/rust-axum-diesel.dockerfile
+      target: dev
+    ports:
+      - 3000:3000
+    environment:
+      - POSTGRES_USERNAME
+      - POSTGRES_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DATABASE
+      - ROCKET_DATABASES
+      - KEYCLOAK_GEN_SEC_CLIENT_ID
+      - KEYCLOAK_GEN_SEC_CLIENT_SECRET
+    volumes:
+      - ../../../backends/rust-axum-diesel/:/backends/rust-axum-diesel/
+
+    networks:
+      - infra_back-bench-dev-infra-network
+
+networks:
+  infra_back-bench-dev-infra-network:
+    external: true

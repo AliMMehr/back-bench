@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 6432:5432
+    volumes:
+      - ./db_init/:/docker-entrypoint-initdb.d/
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - back-bench-dev-infra-network
+
+  redis:
+    image: redis:latest
+    networks:
+      - back-bench-dev-infra-network
+
+networks:
+  back-bench-dev-infra-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
