@@ -2,3 +2,8 @@
 # Rust:
 **/target/
 
+# Python
+**/venv*/
+
+
+

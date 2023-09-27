@@ -2,34 +2,34 @@ FROM rust:1 as base
 
 ##################################################################################
 FROM base as dev
-WORKDIR /backends/rust-axum-diesel
+WORKDIR /backends/rust/rust-axum-diesel
 
 # RUN cargo install cargo-watch
 
 EXPOSE 3000
 
-CMD cd /backends/rust-axum-diesel/; \
+CMD cd /backends/rust/rust-axum-diesel/; \
     cargo run;
 
 ##################################################################################
 FROM base as deps-and-code
-WORKDIR /backends/rust-axum-diesel
+WORKDIR /backends/rust/rust-axum-diesel
 
-COPY backends/rust-axum-diesel/Cargo.toml backends/rust-axum-diesel/Cargo.lock ./
+COPY backends/rust/rust-axum-diesel/Cargo.toml backends/rust/rust-axum-diesel/Cargo.lock ./
 RUN mkdir backends/ ; \
     echo "fn main() {}" > ./backends/main.rs
 RUN cargo build --release --locked
 RUN rm -rf ./backends
-COPY backends/rust-axum-diesel/ ./
+COPY backends/rust/rust-axum-diesel/ ./
 
 ##################################################################################
 FROM deps-and-code as cargo-test
-WORKDIR /backends/rust-axum-diesel
+WORKDIR /backends/rust/rust-axum-diesel
 CMD ["cargo", "test"]
 
 ##################################################################################
 FROM deps-and-code as prod
-WORKDIR /backends/rust-axum-diesel
+WORKDIR /backends/rust/rust-axum-diesel
 
 RUN cargo install --offline --path .
 

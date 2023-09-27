@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  rust-axum-diesel:
+    image: back-bench-rust-axum-diesel-image:dev
+    build:
+      context: ../../../
+      dockerfile: docker/rust-axum-diesel.dockerfile
+      target: dev
+    ports:
+      - 3000:3000
+    environment:
+      - POSTGRES_USERNAME
+      - POSTGRES_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DATABASE
+      - ROCKET_DATABASES
+    volumes:
+      - ../../../backends/rust/rust-axum-diesel/:/backends/rust/rust-axum-diesel/
+
+    networks:
+      - infra_back-bench-dev-infra-network
+  
+  python_flask_sqlalchemy:
+    image: back-bench-python_flask_sqlalchemy-image:dev
+    build:
+      context: ../../../
+      dockerfile: docker/python_flask_sqlalchemy.dockerfile
+      target: dev
+    ports:
+      - 3001:3001
+    environment:
+      - POSTGRES_USERNAME
+      - POSTGRES_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DATABASE
+    volumes:
+      - ../../../backends/python/python_flask_sqlalchemy/:/backends/python/python_flask_sqlalchemy/
+
+    networks:
+      - infra_back-bench-dev-infra-network
+
+networks:
+  infra_back-bench-dev-infra-network:
+    external: true

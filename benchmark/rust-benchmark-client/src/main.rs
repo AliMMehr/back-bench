@@ -44,7 +44,7 @@ async fn send_request(counter: Arc<Mutex<usize>>, sum_times: Arc<Mutex<Duration>
 
     let start = Instant::now();
 
-    let resp = reqwest::get("http://localhost:3000/").await.unwrap();
+    let resp = reqwest::get("http://localhost:3000/hello").await.unwrap();
 
     let resp = resp.text().await.unwrap();
 

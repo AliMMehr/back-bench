@@ -1,6 +1,6 @@
 {
   "rust-analyzer.linkedProjects": [
-    "backends/rust-axum-diesel/Cargo.toml",
+    "backends/rust/rust-axum-diesel/Cargo.toml",
     "benchmark/rust-benchmark-client/Cargo.toml"
   ]
 }
