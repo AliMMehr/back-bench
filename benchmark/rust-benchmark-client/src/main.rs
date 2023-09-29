@@ -44,9 +44,12 @@ async fn send_request(counter: Arc<Mutex<usize>>, sum_times: Arc<Mutex<Duration>
 
     let start = Instant::now();
 
-    let resp = reqwest::get("http://localhost:3000/hello").await.unwrap();
+    let resp = reqwest::get("http://localhost:3000/large_json")
+        .await
+        .unwrap();
 
-    let resp = resp.text().await.unwrap();
+    let mut resp = resp.text().await.unwrap();
+    resp.truncate(10);
 
     let duration = start.elapsed();
 
@@ -55,5 +58,5 @@ async fn send_request(counter: Arc<Mutex<usize>>, sum_times: Arc<Mutex<Duration>
         *sum_times += duration;
     }
 
-    println!("After: {}: {:?}: {:#?}", saved_counter, duration, resp);
+    println!("After: {}: {:?}: {}", saved_counter, duration, resp);
 }
