@@ -2,5 +2,9 @@
   "rust-analyzer.linkedProjects": [
     "backends/rust/rust-axum-diesel/Cargo.toml",
     "benchmark/rust-benchmark-client/Cargo.toml"
-  ]
+  ],
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.formatOnSave": true
+}
 }
