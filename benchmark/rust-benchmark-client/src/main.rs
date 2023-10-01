@@ -53,7 +53,7 @@ async fn send_request(
     let start = Instant::now();
 
     let resp = reqwest_client
-        .get("http://localhost:3000/thread_sleep")
+        .get("http://localhost:3001/spin_sleep")
         .send()
         .await
         .unwrap();

@@ -3,7 +3,8 @@ use tower::ServiceBuilder;
 use tower_http::trace::TraceLayer;
 
 use crate::endpoints::{
-    hello::hello_world, return_large_json::large_json_endpoint, thread_sleep::thread_sleep,
+    hello::hello_world, return_large_json::large_json_endpoint, spin_sleep::spin_sleep,
+    thread_sleep::thread_sleep,
 };
 
 mod endpoints;
@@ -17,7 +18,8 @@ async fn main() {
     let app = Router::new()
         .route("/hello", get(hello_world))
         .route("/large_json", get(large_json_endpoint))
-        .route("/thread_sleep", get(thread_sleep));
+        .route("/thread_sleep", get(thread_sleep))
+        .route("/spin_sleep", get(spin_sleep));
 
     let app = app.layer(ServiceBuilder::new().layer(TraceLayer::new_for_http()));
 
