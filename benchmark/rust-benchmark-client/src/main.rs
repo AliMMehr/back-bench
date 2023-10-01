@@ -9,12 +9,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let start = Instant::now();
 
+    let reqwest_client = reqwest::ClientBuilder::new()
+        .timeout(Duration::from_secs(60))
+        .build()?;
+
     let mut handles = vec![];
     for _ in 0..100 {
         let counter = counter.clone();
         let sum_times = sum_times.clone();
 
-        let handle = tokio::spawn(send_request(counter, sum_times));
+        let handle = tokio::spawn(send_request(reqwest_client.clone(), counter, sum_times));
 
         handles.push(handle)
     }
@@ -33,7 +37,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-async fn send_request(counter: Arc<Mutex<usize>>, sum_times: Arc<Mutex<Duration>>) {
+async fn send_request(
+    reqwest_client: reqwest::Client,
+    counter: Arc<Mutex<usize>>,
+    sum_times: Arc<Mutex<Duration>>,
+) {
     let saved_counter;
     {
         let mut counter = counter.lock().unwrap();
@@ -44,7 +52,9 @@ async fn send_request(counter: Arc<Mutex<usize>>, sum_times: Arc<Mutex<Duration>
 
     let start = Instant::now();
 
-    let resp = reqwest::get("http://localhost:3000/large_json")
+    let resp = reqwest_client
+        .get("http://localhost:3000/thread_sleep")
+        .send()
         .await
         .unwrap();
 

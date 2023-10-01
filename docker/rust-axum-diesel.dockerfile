@@ -9,7 +9,8 @@ WORKDIR /backends/rust/rust-axum-diesel
 EXPOSE 3000
 
 CMD cd /backends/rust/rust-axum-diesel/; \
-    cargo run;
+    RUST_LOG=debug cargo run;
+    # cargo watch -x 'run' ;
 
 ##################################################################################
 FROM base as deps-and-code
