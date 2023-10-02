@@ -11,14 +11,14 @@ RUN set -xe; \
     apt install -y libpq-dev; \
     apt clean;
 
-COPY docker/python_flask_sqlalchemy.requirements.txt ./docker/
+COPY docker/python_gevent_flask_sqlalchemy.requirements.txt ./docker/
 
 RUN set -xe; \
-    pip install -r ./docker/python_flask_sqlalchemy.requirements.txt;
+    pip install -r ./docker/python_gevent_flask_sqlalchemy.requirements.txt;
 
 USER user1:group1
 
-ENV FLASK_APP_LOC '__main__:app'
+ENV FLASK_APP_LOC 'python_gevent_flask_sqlalchemy.__main__:app'
 ENV PYTHONUNBUFFERED '1'
 
 FROM base as dev
@@ -26,17 +26,16 @@ FROM base as dev
 RUN pip install debugpy;
 
 CMD set -xe; \
-    cd ./python_flask_sqlalchemy/; \
     RELOAD_EXTRA_FILES_STR=$( find . -type f -name "*.py" | awk '{printf " --reload-extra-file %s", $0}'); \
-    gunicorn --bind 0.0.0.0:5000 --log-level 'debug' --reload $RELOAD_EXTRA_FILES_STR -k gevent -w 1 $FLASK_APP_LOC
+    gunicorn --bind 0.0.0.0:3002 --log-level 'debug' --reload $RELOAD_EXTRA_FILES_STR -k gevent -w 1 $FLASK_APP_LOC
 
 FROM base as prod
 
 WORKDIR /backends/python
 
 COPY backends/python/sqlalchemy_db_models/ ./sqlalchemy_db_models/
+COPY backends/python/python_gevent_flask_sqlalchemy/ ./flask_backend/
 COPY backends/python/python_flask_sqlalchemy/ ./flask_backend/
 COPY backends/python/shared_python/ ./shared_python/
 
-CMD cd ./python_flask_sqlalchemy/; \
-    gunicorn --bind 0.0.0.0:5000 -k gevent $FLASK_APP_LOC ;
+CMD gunicorn --bind 0.0.0.0:3002 -k gevent $FLASK_APP_LOC ;
